@@ -1,0 +1,5 @@
+anthropic>=0.122
+claude-agent-sdk>=0.2.138
+pydantic>=2.9
+mcp>=1.29
+anyio>=4

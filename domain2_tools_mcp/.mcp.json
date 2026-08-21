@@ -1,0 +1,48 @@
+{
+  "_comment": [
+    "PROJECT-SCOPED MCP configuration. This file is committed to the repository,",
+    "so every teammate gets these servers automatically on clone or pull.",
+    "",
+    "Exam points to notice:",
+    "  1. Secrets are NEVER written here. ${VAR} is expanded from the environment",
+    "     at load time, which is what makes committing this file safe. Without",
+    "     expansion, project scope would force you to choose between sharing the",
+    "     config and sharing the credential.",
+    "  2. Everything in this file is active at the same time as anything in the",
+    "     user-scoped ~/.claude.json. Tools from all connected servers are",
+    "     discovered together and offered to the agent simultaneously.",
+    "  3. github and sentry below are COMMUNITY servers - the exam's guidance is to",
+    "     adopt existing servers for standard integrations and reserve custom",
+    "     implementations for team-specific workflows. 'support' is the custom one:",
+    "     it fronts an internal system no community server could know about."
+  ],
+
+  "mcpServers": {
+    "support": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["./domain2_tools_mcp/mcp_server/support_server.py"],
+      "env": {
+        "SUPPORT_API_TOKEN": "${SUPPORT_API_TOKEN}",
+        "SUPPORT_BASE_URL": "${SUPPORT_BASE_URL:-https://support.internal.example.com}"
+      }
+    },
+
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SENTRY_TOKEN}"
+      }
+    }
+  }
+}
